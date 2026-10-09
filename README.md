@@ -37,6 +37,13 @@ Requires Python 3.8+; use a supported Python release for new installations. Git 
 
 ### Codex Skill
 
+Get the source from the [public repository](https://github.com/FaFaGPT/ResearchLedger):
+
+```bash
+git clone https://github.com/FaFaGPT/ResearchLedger.git
+cd ResearchLedger
+```
+
 From the repository directory, install into a project you choose:
 
 ```bash

@@ -35,6 +35,7 @@ No human scientific decision was fabricated for the demo; it remains ready for r
 - `tools/release_check.py`: tracked-file secret/personal-path pattern scan, example journal/blob integrity, generated-view freshness and all vault wikilinks passed.
 - Byte-preserving Git attributes prevent newline normalization of evidence and manifest-controlled outputs.
 - Python wheel built successfully using the installed build backend and installed into an isolated target directory; its CLI read the example ledger successfully. The host's configured package proxy blocked isolated dependency downloading, so the build used `--no-build-isolation` with existing setuptools/wheel.
+- A fresh Git clone passed all 39 tests plus release scans, demo blob verification and vault synchronization checks. This checks the actual tracked bytes, independently of the development working tree.
 - A Windows/Linux GitHub Actions matrix is included; live CI results are recorded after publication.
 
 ## Scope and remaining limitations

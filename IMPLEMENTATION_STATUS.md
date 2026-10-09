@@ -10,7 +10,7 @@ Resume here, then run `python -m unittest discover -s tests -v`.
 - M3: Research memory, CLI and Codex skill — complete.
 - M4: Protected Obsidian projections and real example vault — complete.
 - M5: Functional/security review, documentation and packaging — complete; 39 tests pass on Windows Python 3.8, 3.10 and 3.12. Wheel build/install and standalone skill validation pass.
-- M6: GitHub publication — account FaFaGPT authenticated; ResearchLedger name available at preflight. Not yet published.
+- M6: Public repository created at https://github.com/FaFaGPT/ResearchLedger. Source push awaits GitHub OAuth workflow scope for the included CI configuration.
 
 ## Decisions
 
@@ -24,7 +24,7 @@ Resume here, then run `python -m unittest discover -s tests -v`.
 
 ## Open issues
 
-- Finish independent package/checkout validation before public push.
+- Independent installed wheel and fresh Git clone validation passed, including all 39 tests and byte-exact demo evidence.
 - Linux execution will be verified in GitHub CI; native Obsidian UI rendering has not been exercised locally.
 
 ## Validation fixes
