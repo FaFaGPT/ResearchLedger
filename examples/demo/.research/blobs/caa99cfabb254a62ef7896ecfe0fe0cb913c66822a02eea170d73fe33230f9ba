@@ -1,0 +1,8 @@
+{
+  "model": "location-estimator",
+  "dataset": "synthetic-contamination-v1",
+  "algorithm": "median-vs-mean",
+  "metric": "mse",
+  "seeds": [11, 22, 33],
+  "robust": true
+}

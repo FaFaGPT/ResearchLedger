@@ -44,7 +44,7 @@ class Ledger:
                 schema.require(data["origin"] == "AI-Proposed", "Agent ideas must be AI-Proposed")
             for rid in data.get("literature", []):
                 self.get(rid, "literature")
-            r = record("innovation", dict(data, status="Candidate", assessment="Untested", relations=[]), source)
+            r = record("innovation", dict(data, status="Candidate", relations=[]), source)
             self.save([r], "innovation.add", source)
         return r
 
@@ -59,7 +59,7 @@ class Ledger:
             if action == "revise":
                 schema.innovation(data)
                 values.update(data)
-                values["assessment"] = "Untested"
+                values.pop("assessment", None)
             if action in ("replace", "split"):
                 schema.require(bool(targets) and (action != "split" or len(targets) >= 2), "Evolution requires target innovations")
                 schema.require(rid not in targets and len(set(targets)) == len(targets), "Invalid evolution targets")
@@ -215,7 +215,7 @@ class Ledger:
         return {"goal": goal["title"][:600], "mode": goal["mode"], "primary_innovation": goal["primary_innovation"], "innovations": innovations,
                 "counts": dict(Counter(r["status"] for r in experiments)),
                 "recent_experiments": [{"id": r["id"], "title": r["title"][:180], "status": r["status"]} for r in experiments[-limit:]],
-                "key_results": [{k: r.get(k) for k in ("id", "experiment_id", "status", "metric_improved", "acceptance_met", "drift")} for r in records if r["kind"] == "audit"][-limit:],
+                "key_results": [{k: r.get(k) for k in ("id", "experiment_id", "status", "mean_delta", "metric_improved", "acceptance_met", "drift")} for r in records if r["kind"] == "audit"][-limit:],
                 "failed_routes": [{"id": r["id"], "title": r["title"][:180], "status": r["status"]} for r in experiments if r["status"] in ("Failed", "Deviated", "Unverified")][-limit:],
                 "current_task": str(memory.get("current_task", "Review pending contracts"))[:600],
                 "next_steps": [x[:300] for x in memory.get("next_steps", [])[:limit]],
@@ -227,6 +227,7 @@ class Ledger:
         lines = ["# Research State", "", "Goal: " + s["goal"], "Mode: " + s["mode"], "Primary: " + str(s["primary_innovation"]), "", "Current task: " + s["current_task"], "", "## Innovations"]
         lines += ["- {id}: {title} ({status}; {assessment})".format(**r) for r in s["innovations"]]
         lines += ["", "## Recent experiments"] + ["- {id}: {title} — {status}".format(**r) for r in s["recent_experiments"]]
+        lines += ["", "## Key evidence"] + ["- {experiment_id}: delta={mean_delta}; acceptance={acceptance_met}; {status}".format(**r) for r in s["key_results"]]
         lines += ["", "## Failed / uncertain routes"] + ["- {id}: {status}".format(**r) for r in s["failed_routes"]]
         lines += ["", "## Next steps"] + ["- " + x for x in s["next_steps"]]
         lines += ["", "## Unresolved"] + ["- " + x for x in s["unresolved"]]

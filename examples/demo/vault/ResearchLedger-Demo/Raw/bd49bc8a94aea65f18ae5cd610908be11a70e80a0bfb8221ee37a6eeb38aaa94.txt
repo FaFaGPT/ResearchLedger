@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "failure.py", line 1, in <module>
+    raise RuntimeError('Intentional failure case for ResearchLedger demonstration')
+RuntimeError: Intentional failure case for ResearchLedger demonstration

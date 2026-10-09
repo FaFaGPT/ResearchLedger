@@ -26,6 +26,8 @@ The project configuration is a JSON object containing `model`, `dataset`, `algor
 
 The runner passes `RESEARCHLEDGER_CONFIG` (absolute config file) and `RESEARCHLEDGER_RESULT` (unique result destination). Commands are argv lists with no shell interpretation. `{python}` resolves to the current interpreter. The experimental script writes the result JSON described in [audit.md](audit.md). Every attempt gets a distinct directory; repeating requires a new contract.
 
+V1 requires exactly `wall-time budget` and `output budget` in `stop_conditions`. Unsupported declared rules are rejected rather than silently ignored. Encode domain-specific stops in the approved program. Preflight rejects missing/mismatched config and innovation invariants before starting the process.
+
 `checkpoint FILE` requires `current_task` (text), `next_steps` and `unresolved` (text lists). History searches all revisions and returns a compact last-20 list by default; `--kind` and `--limit` refine it.
 
 ## Exploration

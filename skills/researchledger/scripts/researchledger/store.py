@@ -17,6 +17,19 @@ def canonical(value):
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
 
 
+def parse_json(raw):
+    def unique(pairs):
+        value = {}
+        for key, item in pairs:
+            if key in value:
+                raise LedgerError("Duplicate JSON key: " + key)
+            value[key] = item
+        return value
+    parsed = json.loads(raw, object_pairs_hook=unique)
+    canonical(parsed)  # Reject NaN, Infinity and overflow-to-infinity everywhere.
+    return parsed
+
+
 def digest(data):
     return hashlib.sha256(data).hexdigest()
 
@@ -44,6 +57,8 @@ def relative(value):
 
 def confined(root, value):
     relative(value)
+    if any(c in value for c in '*?<>|"'):
+        raise LedgerError("Wildcard/reserved character in concrete path")
     root = Path(root).absolute()
     target = root.joinpath(*value.split("/"))
     # Check ancestors as well as descendants: junctions/reparse points count as links.

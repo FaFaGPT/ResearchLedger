@@ -1,5 +1,6 @@
 """Opt-in cooperative local execution; not a security sandbox."""
 import ast
+import difflib
 import fnmatch
 import json
 import os
@@ -11,7 +12,7 @@ import threading
 import time
 
 from . import schema
-from .store import LedgerError, canonical, confined, digest, record, uid
+from .store import LedgerError, canonical, confined, digest, parse_json, record, uid
 
 
 EXCLUDED = {".git", ".research", "__pycache__", ".venv", "node_modules"}
@@ -58,6 +59,17 @@ def preflight(ledger, experiment_id):
                 errors.append("Planned input changed: " + name)
         except (OSError, LedgerError):
             errors.append("Missing/unsafe planned input: " + name)
+    try:
+        observed = parse_json(confined(ledger.store.root, exp["contract"]["config"]).read_bytes())
+        schema.require(isinstance(observed, dict), "Config must be an object")
+        for key in ("model", "dataset", "algorithm", "metric", "seeds"):
+            if observed.get(key) != exp["contract"][key]:
+                errors.append("Preflight configuration mismatch: " + key)
+        for key, expected in exp["invariants"].items():
+            if key not in observed or observed[key] != expected:
+                errors.append("Preflight innovation boundary mismatch: " + key)
+    except (OSError, ValueError):
+        errors.append("Unreadable or invalid experiment configuration")
     sandbox = goal["mode"] == "Explore" and exp["contract"].get("exploratory", False)
     if sandbox:
         policy = goal["exploration"]
@@ -105,7 +117,7 @@ def execute(ledger, experiment_id, execute=False, source="agent"):
         output.parent.mkdir(parents=True, exist_ok=False)
         config_raw = confined(ledger.store.root, c["config"]).read_bytes()
         try:
-            config = json.loads(config_raw)
+            config = parse_json(config_raw)
             schema.require(isinstance(config, dict), "Configuration must be a JSON object")
         except ValueError:
             raise LedgerError("Configuration must be valid JSON")
@@ -183,7 +195,7 @@ def execute(ledger, experiment_id, execute=False, source="agent"):
             if output.is_file() and output.stat().st_size <= limit:
                 raw = output.read_bytes()
                 evidence.append(record("evidence", {"experiment_id": experiment_id, "run_id": run_id, "type": "result-json", "artifact": ledger.store.blob(raw)}, "runner"))
-                report = json.loads(raw)
+                report = parse_json(raw)
             elif output.exists():
                 stopped = "output budget"
         except (ValueError, OSError) as exc:
@@ -194,7 +206,23 @@ def execute(ledger, experiment_id, execute=False, source="agent"):
         except (LedgerError, OSError):
             after, changes = {}, ["Unknown"]
             error = "Workspace snapshot failed"
+        code_changes = []
+        for name in changes:
+            if name not in exp["inputs"]:
+                continue
+            old_ref = exp["inputs"][name]
+            try:
+                path = confined(ledger.store.root, name)
+                schema.require(not path.exists() or path.stat().st_size <= 16 * 1024 * 1024, "Changed source too large")
+                raw = path.read_bytes() if path.exists() else b""
+                new_ref = ledger.store.blob(raw)
+                old_text = ledger.store.read_blob(old_ref).decode("utf-8", "replace").splitlines(True)
+                new_text = raw.decode("utf-8", "replace").splitlines(True)
+                diff = "".join(difflib.unified_diff(old_text, new_text, fromfile="before/" + name, tofile="after/" + name))
+                code_changes.append({"path": name, "before": old_ref, "after": new_ref, "diff": ledger.store.blob(diff.encode()), "deleted": not path.exists()})
+            except (LedgerError, OSError):
+                code_changes.append({"path": name, "before": old_ref, "after": "Unknown"})
         final = record("run", dict(run, status="Finished", exit_code=exit_code, stopped=stopped, error=error, elapsed_seconds=round(elapsed, 6),
-                                    after=after, changes=changes, report=report, evidence=[r["id"] for r in evidence]), "runner", run)
+                                    after=after, changes=changes, code_changes=code_changes, report=report, evidence=[r["id"] for r in evidence]), "runner", run)
         ledger.save(evidence + [final], "run.finish", "runner")
         return persist_audit(ledger, final, locked=True)

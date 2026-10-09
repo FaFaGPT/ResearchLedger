@@ -1,0 +1,70 @@
+{
+  "filters": {
+    "and": [
+      "file.inFolder(\"ResearchLedger-Demo\")",
+      "managed_by == \"ResearchLedger\""
+    ]
+  },
+  "properties": {
+    "note.title": {
+      "displayName": "Title"
+    },
+    "note.status": {
+      "displayName": "Status"
+    }
+  },
+  "views": [
+    {
+      "type": "table",
+      "name": "Innovations",
+      "filters": "type == \"innovation\"",
+      "order": [
+        "file.name",
+        "note.title",
+        "note.status",
+        "note.version",
+        "note.updated",
+        "note.links"
+      ]
+    },
+    {
+      "type": "table",
+      "name": "Experiments",
+      "filters": "type == \"experiment\"",
+      "order": [
+        "file.name",
+        "note.title",
+        "note.status",
+        "note.version",
+        "note.updated",
+        "note.links"
+      ]
+    },
+    {
+      "type": "table",
+      "name": "Decisions",
+      "filters": "type == \"decision\"",
+      "order": [
+        "file.name",
+        "note.title",
+        "note.status",
+        "note.version",
+        "note.updated",
+        "note.links"
+      ]
+    },
+    {
+      "type": "table",
+      "name": "Evidence",
+      "filters": "type == \"evidence\"",
+      "order": [
+        "file.name",
+        "note.title",
+        "note.status",
+        "note.version",
+        "note.updated",
+        "note.links"
+      ]
+    }
+  ]
+}

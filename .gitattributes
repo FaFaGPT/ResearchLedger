@@ -1,3 +1,5 @@
 * text=auto eol=lf
 *.png binary
 *.zip binary
+# Evidence hashes and sync manifests require byte-exact checkout on every OS.
+examples/demo/** -text whitespace=cr-at-eol

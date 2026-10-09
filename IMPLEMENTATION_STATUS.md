@@ -8,9 +8,9 @@ Resume here, then run `python -m unittest discover -s tests -v`.
 - M1: Append-only storage, schemas, innovation registry — complete.
 - M2: Contracts, controlled runner, provenance and audit — complete; 18 tests pass.
 - M3: Research memory, CLI and Codex skill — complete.
-- M4: Protected Obsidian projections — implemented; 28 cumulative tests pass. Example vault pending.
-- M5: Functional/security review, documentation and packaging — pending.
-- M6: GitHub publication — pending; portable GitHub CLI downloaded and official checksum verified.
+- M4: Protected Obsidian projections and real example vault — complete.
+- M5: Functional/security review, documentation and packaging — complete; 39 tests pass on Windows Python 3.8, 3.10 and 3.12. Wheel build/install and standalone skill validation pass.
+- M6: GitHub publication — account FaFaGPT authenticated; ResearchLedger name available at preflight. Not yet published.
 
 ## Decisions
 
@@ -24,5 +24,13 @@ Resume here, then run `python -m unittest discover -s tests -v`.
 
 ## Open issues
 
-- Complete implementation and tests before any public push.
-- GitHub authentication must be performed by the user if unavailable.
+- Finish independent package/checkout validation before public push.
+- Linux execution will be verified in GitHub CI; native Obsidian UI rendering has not been exercised locally.
+
+## Validation fixes
+
+- Closed subprocess output pipes after the initial test exposed a resource warning.
+- Reject duplicate JSON fields, NaN and infinities while preserving malformed raw evidence as Unverified.
+- Reject unsupported declarative stop rules; domain-specific rules belong in approved code.
+- Check config and innovation boundaries before execution, not only in the post-run audit.
+- Preserve exact evidence and generated-vault bytes in Git to prevent newline conversion breaking hashes.

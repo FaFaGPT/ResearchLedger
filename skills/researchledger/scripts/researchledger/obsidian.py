@@ -104,6 +104,13 @@ def project(ledger, cfg):
                 raw_name = "Raw/" + ref["sha256"] + ".txt"
                 output[raw_name] = ledger.store.read_blob(ref)
                 body += ["", "Captured input `" + name + "`: [[" + ns + "/" + raw_name + "]]"]
+            for change in r.get("code_changes", []):
+                for stage in ("after", "diff"):
+                    if isinstance(change.get(stage), dict):
+                        ref = change[stage]
+                        raw_name = "Raw/" + ref["sha256"] + ".txt"
+                        output[raw_name] = ledger.store.read_blob(ref)
+                        body += ["", stage + " `" + change["path"] + "`: [[" + ns + "/" + raw_name + "]]"]
         body += ["", "## Record", "", "````json", json.dumps(r, ensure_ascii=False, indent=2, allow_nan=False), "````", ""]
         if r["kind"] == "innovation":
             body += ["## Revision history", ""]

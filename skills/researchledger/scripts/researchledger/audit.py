@@ -1,6 +1,7 @@
 """Deterministic evidence/deviation checks; scientific validity requires review."""
 import fnmatch
 import json
+import math
 import statistics
 
 from . import schema
@@ -13,6 +14,12 @@ def inspect_run(ledger, run):
     deviations, unknown, drift = [], [], []
     report = run.get("report")
     refs = list(run["inputs"].values()) + [run["config_artifact"]]
+    for change in run.get("code_changes", []):
+        for key in ("after", "diff"):
+            if isinstance(change.get(key), dict):
+                refs.append(change[key])
+            elif key == "after":
+                unknown.append("Changed source bytes unavailable: " + change["path"])
     for rid in run.get("evidence", []):
         try:
             refs.append(ledger.get(rid, "evidence")["artifact"])
@@ -80,7 +87,14 @@ def inspect_run(ledger, run):
         unknown.append("Invalid report: " + str(exc))
     deltas = [values[(s, "treatment")]["value"] - values[(s, "baseline")]["value"] for s in c["seeds"]
               if (s, "treatment") in values and (s, "baseline") in values]
-    delta = statistics.mean(deltas) if deltas else None
+    try:
+        delta = statistics.mean(deltas) if deltas else None
+        if delta is not None and not math.isfinite(delta):
+            unknown.append("Metric delta overflow; numeric evidence cannot be safely summarized")
+            delta = None
+    except OverflowError:
+        unknown.append("Metric delta overflow; numeric evidence cannot be safely summarized")
+        delta = None
     signed = delta if c["acceptance"]["direction"] == "maximize" else (-delta if delta is not None else None)
     improved = signed is not None and signed > 0
     accepted = signed is not None and signed >= c["acceptance"]["min_delta"] and len(deltas) >= c["acceptance"]["min_pairs"]
@@ -106,6 +120,7 @@ def method_card(ledger, run, audit):
             "execution_flow": "Runner receipt -> captured source/config -> process -> raw log/result -> paired comparison",
             "runtime_call_trace": "Unknown", "dependency_lock": "Captured only when explicitly listed in contract.code; otherwise Unknown",
             "changes": run.get("changes", "Unknown"), "data_processing_declared": c["data_processing"], "training_declared": c["training"], "evaluation_declared": c["evaluation"],
+            "code_changes": run.get("code_changes", []),
             "results": {k: audit[k] for k in ("status", "execution_success", "metric_improved", "acceptance_met", "mean_delta", "unknown", "drift")},
             "evidence": run.get("evidence", []), "scientific_validity": "Unknown until researcher review; declarations are not execution proof"}
 

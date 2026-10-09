@@ -5,11 +5,11 @@ import sys
 from pathlib import Path
 
 from .engine import Ledger
-from .store import LedgerError
+from .store import LedgerError, parse_json
 
 
 def read_json(path):
-    return json.loads(Path(path).read_text(encoding="utf-8-sig"))
+    return parse_json(Path(path).read_text(encoding="utf-8-sig"))
 
 
 def parser():

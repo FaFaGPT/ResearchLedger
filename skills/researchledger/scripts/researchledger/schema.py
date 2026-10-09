@@ -52,6 +52,7 @@ def contract(data):
     relative(data["config"])
     for key in ("code", "command", "allowed_changes", "forbidden_changes", "stop_conditions"):
         strings(data[key], key, nonempty=key not in ("allowed_changes", "forbidden_changes"))
+    require(set(data["stop_conditions"]) == {"wall-time budget", "output budget"}, "V1 executable stops are exactly wall-time budget and output budget; encode domain stops in the approved program")
     for path in data["code"] + data["allowed_changes"] + data["forbidden_changes"]:
         relative(path)
         require(path.split("/")[0] not in (".research", ".git"), "Internal ledger/Git paths cannot be experiment scope")

@@ -16,7 +16,8 @@ class JsonEvidenceAdapter:
     def read(self, locator):
         path = Path(locator)
         raw = path.read_bytes()
-        result = json.loads(raw)
+        from .store import parse_json
+        result = parse_json(raw)
         fields(result, ("observed", "trials"))
         from .store import digest
         return {"report": result, "source": {"adapter": "json", "locator": str(path), "sha256": digest(raw)}}
