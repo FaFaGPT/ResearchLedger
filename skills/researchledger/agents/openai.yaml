@@ -1,0 +1,6 @@
+interface:
+  display_name: "ResearchLedger"
+  short_description: "Innovation, evidence, audits and research continuity"
+  default_prompt: "Use $researchledger to resume my research, summarize evidence, and plan the next authorized experiment."
+policy:
+  allow_implicit_invocation: true

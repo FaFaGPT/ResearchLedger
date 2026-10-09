@@ -1,0 +1,22 @@
+{
+  "title": "Median vs mean under fixed contamination",
+  "innovation_id": "REPLACE-WITH-REGISTERED-ID",
+  "hypothesis": "The median reduces MSE by at least 0.5 under fixed contamination.",
+  "purpose": "Evaluate robustness under a controlled synthetic protocol",
+  "algorithm": "median-vs-mean",
+  "model": "location-estimator",
+  "dataset": "synthetic-contamination-v1",
+  "metric": "mse",
+  "seeds": [11, 22, 33],
+  "config": "config.json",
+  "code": ["experiment.py"],
+  "command": ["{python}", "experiment.py"],
+  "allowed_changes": [],
+  "forbidden_changes": ["config.json", "experiment.py"],
+  "acceptance": {"direction": "minimize", "min_delta": 0.5, "min_pairs": 3},
+  "budget": {"max_seconds": 10, "max_output_bytes": 65536},
+  "stop_conditions": ["wall-time budget", "output budget"],
+  "evaluation": "100 paired contaminated samples per seed",
+  "data_processing": "Seeded Gaussian samples plus two +20 outliers",
+  "training": "No learned parameters; deterministic estimator"
+}

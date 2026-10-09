@@ -7,10 +7,10 @@ Resume here, then run `python -m unittest discover -s tests -v`.
 - M0: Official-source research and architecture complete.
 - M1: Append-only storage, schemas, innovation registry — complete.
 - M2: Contracts, controlled runner, provenance and audit — complete; 18 tests pass.
-- M3: Research memory, CLI and Codex skill — pending.
-- M4: Protected Obsidian projections and example vault — pending.
+- M3: Research memory, CLI and Codex skill — complete.
+- M4: Protected Obsidian projections — implemented; 28 cumulative tests pass. Example vault pending.
 - M5: Functional/security review, documentation and packaging — pending.
-- M6: GitHub publication — pending; GitHub CLI not initially on PATH.
+- M6: GitHub publication — pending; portable GitHub CLI downloaded and official checksum verified.
 
 ## Decisions
 
