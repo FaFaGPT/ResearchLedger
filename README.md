@@ -2,6 +2,9 @@
 
 **Innovation-Driven Research Management for Coding Agents**
 
+[![Tests](https://github.com/FaFaGPT/ResearchLedger/actions/workflows/tests.yml/badge.svg)](https://github.com/FaFaGPT/ResearchLedger/actions/workflows/tests.yml)
+[Download v0.1.0](https://github.com/FaFaGPT/ResearchLedger/releases/tag/v0.1.0)
+
 Keep the scientific question in view as experiments, code changes and conversations accumulate. ResearchLedger is a working Codex Skill and zero-dependency Python CLI that connects research innovations to contracts, implementation evidence and explicit scientific decisions.
 
 **Innovation-driven · Evidence-grounded · Method-transparent · Boundary-aware · Context-efficient · Knowledge-connected**

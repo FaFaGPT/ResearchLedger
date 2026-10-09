@@ -36,7 +36,7 @@ No human scientific decision was fabricated for the demo; it remains ready for r
 - Byte-preserving Git attributes prevent newline normalization of evidence and manifest-controlled outputs.
 - Python wheel built successfully using the installed build backend and installed into an isolated target directory; its CLI read the example ledger successfully. The host's configured package proxy blocked isolated dependency downloading, so the build used `--no-build-isolation` with existing setuptools/wheel.
 - A fresh Git clone passed all 39 tests plus release scans, demo blob verification and vault synchronization checks. This checks the actual tracked bytes, independently of the development working tree.
-- A Windows/Linux GitHub Actions matrix is included; live CI results are recorded after publication.
+- [GitHub Actions run 37875189661](https://github.com/FaFaGPT/ResearchLedger/actions/runs/37875189661) **passed all four jobs**: Ubuntu and Windows, each with Python 3.8 and 3.12. Every job ran all 39 tests and the release checks. Tested implementation commit: `cc2c339741aabe815f73cb336267c3c5973a4dae`; subsequent release changes are documentation only.
 
 ## Scope and remaining limitations
 
