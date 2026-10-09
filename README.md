@@ -1,5 +1,7 @@
 # ResearchLedger
 
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 **Innovation-Driven Research Management for Coding Agents**
 
 [![Tests](https://github.com/FaFaGPT/ResearchLedger/actions/workflows/tests.yml/badge.svg)](https://github.com/FaFaGPT/ResearchLedger/actions/workflows/tests.yml)

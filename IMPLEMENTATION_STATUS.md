@@ -33,6 +33,10 @@ Resume here, then run `python -m unittest discover -s tests -v`.
 - Matrix: Ubuntu/Windows with Python 3.8/3.12; 39 tests and release checks passed in every job.
 - Release location: https://github.com/FaFaGPT/ResearchLedger/releases/tag/v0.1.0
 
+## Documentation updates
+
+- Added a complete Simplified Chinese README with installation, workflows, evidence interpretation, Obsidian integration and implementation limits; English and Chinese READMEs link to each other.
+
 ## Validation fixes
 
 - Closed subprocess output pipes after the initial test exposed a resource warning.
