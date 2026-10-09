@@ -1,0 +1,8 @@
+{
+  "title": "Robust estimation under sparse contamination",
+  "motivation": "A small number of outliers can dominate mean estimation error.",
+  "mechanism": "Use the sample median to limit the influence of large outliers.",
+  "contribution": "Demonstrate reduced location MSE under a fixed contamination protocol, not novelty over existing statistics.",
+  "origin": "Researcher-Defined",
+  "invariants": {"robust": true}
+}
